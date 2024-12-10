@@ -1,13 +1,39 @@
 import styles from "./styles.module.scss";
 import TitlePage from "@/shared/components/titlePage/TitlePage";
 import AnalyticCard from "@/shared/components/analyticCard/AnalyticCard";
-import { IoMusicalNote } from "react-icons/io5";
-import { IoTrendingUpOutline } from "react-icons/io5";
+import { IoAlbums, IoMusicalNote } from "react-icons/io5";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa6";
 import { OverviewChart } from "@/shared/components/overviewChart/OverviewChart";
 import OverviewRankSong from "@/shared/components/overviewRankSong/OverviewRankSong";
+import { useEffect, useState } from "react";
+import { getTotalAlbums, getTotalTracks } from "@/service/dashboardService";
 const HomePage = () => {
+
+  const [totalTracks, setTotalTracks] = useState(0);
+  const [totalAlbums, setTotalAlbums] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const songs = await getTotalTracks();
+        const albums = await getTotalAlbums();
+        setTotalTracks(songs);
+        setTotalAlbums(albums);
+        // console.log(songs);
+        // console.log(albums);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className={styles.container}>
       <TitlePage title={["Overview", "Dashboard"]} />
@@ -16,17 +42,20 @@ const HomePage = () => {
         <AnalyticCard
           iconColor="#4CAF50"
           icon={IoMusicalNote}
-          title="Total Songs"
-          mainNumber={10}
-          unit="Songs"
+          title="Total Tracks"
+          mainNumber={totalTracks}
+          unit="Track(s)"
+          loading={loading}
         />
         <AnalyticCard
           iconColor="#2196F3"
-          icon={IoTrendingUpOutline}
-          title="Current Popularity"
-          mainNumber={11}
-          unit="# Rank"
+          icon={IoAlbums}
+          title={"Total Albums"}
+          mainNumber={totalAlbums}
+          unit="Album(s)"
+          loading={loading}
         />
+        
 
         <AnalyticCard
           iconColor="#FFC107"
@@ -34,6 +63,7 @@ const HomePage = () => {
           title="Followers"
           mainNumber={1000}
           unit="followers"
+          loading={loading}
         />
         <AnalyticCard
           iconColor="#673AB7"
@@ -41,6 +71,7 @@ const HomePage = () => {
           title="Song Review Requests"
           mainNumber={2}
           unit="Songs Pending Review"
+          loading={loading}
         />
       </section>
 

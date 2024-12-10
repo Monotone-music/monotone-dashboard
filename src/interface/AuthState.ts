@@ -1,19 +1,27 @@
-// Define the User type with necessary properties
-interface User {
-  id: string;
-  name: string;
-  role: string; // Example roles: "artist", "admin", etc.
-}
+import * as yup from "yup";
 
-// Define the AuthState type
 export interface AuthState {
-  user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
-  errorMsg: string| null;
-  setIsAuthenticated: (isAuthenticated: boolean) => void;
-  setUser: (user: User) => void;
+  token: string | null;
+  refreshToken: string | null;
+  error: string | null;
+  user: any;
+  setIsAuthenticated: (authStatus: boolean) => void;
   setToken: (token: string) => void;
-  setErrorMsg: (errorMsg: string) => void;
+  setRefreshToken: (refreshToken: string) => void;
+  setError: (errorMessage: string) => void;
+  clearAuthState: () => void; // To clear the state on logout or session expiry
   logout: () => void;
 }
+
+export interface ISignInForm {
+  username: string;
+  password: string;
+}
+
+export const SignInSchema = yup
+  .object({
+    username: yup.string().required(),
+    password: yup.string().required(),
+  })
+  .required();
