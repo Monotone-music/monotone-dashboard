@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import AccountsBreadcrumb from "../AccountsBreadcrumb/AccountsBreadcrumb";
 import AccountsPagination from "../AccountsPagination/AccountsPagination";
 import { useQuery } from "@tanstack/react-query";
-import useAuthStore from "@/store/useAuthStore";
+import {useAuthStore} from "@/store/useAuthStore";
 import { getAllArtists } from "@/service/adminService";
 import AccountsMobileCard from "../AccountsMobileCard/AccountsMobileCard";
 import { User } from "@/interface/User";

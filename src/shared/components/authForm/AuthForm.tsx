@@ -8,14 +8,14 @@ import "react-toastify/dist/ReactToastify.css";
 import BeatLoader from "react-spinners/BeatLoader";
 import { LoginData, LoginSchema } from "@/interface/Login";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "@/store/useAuthStore";
-import useSignIn from "@/service/mutations/signInMutations";
+import {useAuthStore} from "@/store/useAuthStore";
+import { useSignInMutation } from "@/service/mutations/signInMutations";
 
 const AuthForm = () => {
-  const {errorMsg} = useAuthStore()
+  const {error} = useAuthStore()
   const { toast } = useToast()
   const navigate = useNavigate();
-  const signInMutation = useSignIn();
+  const signInMutation = useSignInMutation();
   const {
     register,
     handleSubmit,
@@ -39,7 +39,7 @@ const AuthForm = () => {
         toast({
           variant: "destructive",
           duration: 3000,
-          title: errorMsg || "Invalid Credentials",
+          title: error || "Invalid Credentials",
           description: "Please try again your username or password"
         })
       }

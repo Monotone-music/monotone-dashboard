@@ -1,17 +1,19 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import { IconType } from "react-icons";
+import PuffLoader from "react-spinners/PuffLoader";
 
 interface AnalyticCardProps {
     title: string;
-    mainNumber: string | number;
+    mainNumber: string | number | null;
     dateRange?: string;
     icon: IconType;
     iconColor: string;
     unit: string;
+    loading?: boolean;
 }
 
-const AnalyticCard:React.FC<AnalyticCardProps> = ({title, mainNumber, dateRange, icon, iconColor, unit}) => {
+const AnalyticCard:React.FC<AnalyticCardProps> = ({title, mainNumber, dateRange, icon, iconColor, unit, loading}) => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -23,7 +25,10 @@ const AnalyticCard:React.FC<AnalyticCardProps> = ({title, mainNumber, dateRange,
         <div className={styles.icon} style={{color: iconColor}}>
             {React.createElement(icon)}
         </div>
-        <div className={styles["main-number"]}>{mainNumber} <span className={styles.unit}>{unit}</span></div>
+        <div className={styles["main-number"]}>
+          {loading ? <PuffLoader size={40} color={iconColor} /> : `${mainNumber} `}
+          <span className={styles.unit}>{unit}</span>
+        </div>
       </div>
     </div>
   );
