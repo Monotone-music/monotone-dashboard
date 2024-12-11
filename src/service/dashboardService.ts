@@ -9,3 +9,4 @@ export const getTotalAlbums = async () => {
     const response = await apiClient.get('/album/count');
     return response.data.data.count;
 };
+

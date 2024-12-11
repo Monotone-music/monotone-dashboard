@@ -22,8 +22,6 @@ const HomePage = () => {
         const albums = await getTotalAlbums();
         setTotalTracks(songs);
         setTotalAlbums(albums);
-        // console.log(songs);
-        // console.log(albums);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

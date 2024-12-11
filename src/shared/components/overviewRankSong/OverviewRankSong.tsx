@@ -54,7 +54,7 @@ const OverviewRankSong = () => {
             {loading ? (
               <>
                 {[...Array(5)].map((_, index) => (
-                  <TableRow key={index} className="h-20">
+                  <TableRow key={index} className="h-16">
                     <TableCell><Skeleton className="h-6 w-full" /></TableCell>
                     <TableCell><Skeleton className="h-6 w-full" /></TableCell>
                     <TableCell><Skeleton className="h-6 w-full" /></TableCell>
@@ -64,7 +64,7 @@ const OverviewRankSong = () => {
               </>
             ) : (
               tracks.map((track) => (
-                <TableRow key={track._id} className="h-20">
+                <TableRow key={track._id} className="h-16">
                   <TableCell className="font-medium truncate max-w-[100px]">{track.title}</TableCell>
                   <TableCell>{track.displayedArtist}</TableCell>
                   <TableCell className="text-center">{formatDuration(track.duration)}</TableCell>
