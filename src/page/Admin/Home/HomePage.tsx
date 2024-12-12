@@ -1,18 +1,22 @@
 import styles from "./styles.module.scss";
 import TitlePage from "@/shared/components/titlePage/TitlePage";
 import AnalyticCard from "@/shared/components/analyticCard/AnalyticCard";
-import { IoAlbums, IoMusicalNote } from "react-icons/io5";
+import { IoAlbums, IoEye, IoMusicalNote } from "react-icons/io5";
 import { AiOutlineCheckCircle } from "react-icons/ai";
-import { FaRegUser } from "react-icons/fa6";
 import { OverviewChart } from "@/shared/components/overviewChart/OverviewChart";
 import OverviewRankSong from "@/shared/components/overviewRankSong/OverviewRankSong";
 import { useEffect, useState } from "react";
-import { getTotalAlbums, getTotalTracks } from "@/service/dashboardService";
+import { getApproveReqCounts, getHistoricalViewCounts, getTotalAlbums, getTotalTracks } from "@/service/dashboardService";
+import { useNavigate } from "react-router-dom";
 const HomePage = () => {
 
   const [totalTracks, setTotalTracks] = useState(0);
   const [totalAlbums, setTotalAlbums] = useState(0);
+  const [totalViews, setTotalViews] = useState(0);
+  const [totalApproveReq, setTotalApproveReq] = useState(0);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
 
 
   useEffect(() => {
@@ -20,8 +24,12 @@ const HomePage = () => {
       try {
         const songs = await getTotalTracks();
         const albums = await getTotalAlbums();
+        const views = await getHistoricalViewCounts();
+        const approveReq = await getApproveReqCounts();
         setTotalTracks(songs);
         setTotalAlbums(albums);
+        setTotalViews(views);
+        setTotalApproveReq(approveReq);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -31,6 +39,11 @@ const HomePage = () => {
 
     fetchData();
   }, []);
+
+  const handleNavigateToApprovePage = () => {
+    navigate('/admin/approve');
+  };
+
 
   return (
     <div className={styles.container}>
@@ -57,20 +70,24 @@ const HomePage = () => {
 
         <AnalyticCard
           iconColor="#FFC107"
-          icon={FaRegUser}
-          title="Followers"
-          mainNumber={1000}
-          unit="followers"
+          icon={IoEye}
+          title="Historical Views"
+          mainNumber={totalViews}
+          unit="Views"
           loading={loading}
         />
+        <button 
+          onClick={handleNavigateToApprovePage}
+        >
         <AnalyticCard
           iconColor="#673AB7"
           icon={AiOutlineCheckCircle}
-          title="Song Review Requests"
-          mainNumber={2}
-          unit="Songs Pending Review"
-          loading={loading}
+          title="Track Approve Requests"
+          mainNumber={totalApproveReq}
+          unit="Tracks Pending Review"
+          loading={loading}  
         />
+        </button>
       </section>
 
       <section className={styles["metrics-section"]}>

@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.scss";
 import {
@@ -16,6 +16,7 @@ import HomePage from "./page/Admin/Home/HomePage";
 import AccountsManagement from "./page/Admin/Accounts/AccountsManagement";
 import ArtistAccount from "./page/Admin/Accounts/Artist/ArtistAccount";
 import UploaderPage from "./page/Uploader/UploaderPage";
+import ApprovePage from "./page/Approve/ApprovePage";
 // import router from "./util/Router";
 
 const queryClient = new QueryClient({
@@ -42,16 +43,17 @@ const router = createBrowserRouter([
         children: [{ path: "artist", element: <ArtistAccount /> }],
       },
       { path: "uploader", element: <UploaderPage/> },
+      { path: "approve", element: <ApprovePage /> },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       <ReactQueryDevtools initialIsOpen={false} />
       <Toaster />
     </QueryClientProvider>
-  </StrictMode>
+  // </StrictMode>
 );

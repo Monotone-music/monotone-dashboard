@@ -1,0 +1,77 @@
+.approvePage {
+    padding: 20px;
+  }
+  
+  .recordingsContainer {
+    display: flex;
+    width: calc(100% - 500px);
+    gap: 20px;
+  }
+  
+  .recordingsList {
+    flex: 1;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .recordingCard {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer; /* Add cursor pointer to indicate clickability */
+  }
+  
+  .recordingInfo {
+    // flex: 1;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  
+  .recordingImage {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .expandedRecording {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 500px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-left: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+  .toast-success {
+    background-color: #43a047;
+    color: white;
+  }
+  
+  .toast-failed {
+    background-color: #e53935;
+    color: white;
+  }
