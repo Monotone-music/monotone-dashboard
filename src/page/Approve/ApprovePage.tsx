@@ -43,7 +43,7 @@ const ApprovePage = () => {
   const handleApprove = async (id: string, title: string) => {
     try {
       await approveRecording(id);
-      console.log(`Approved recording with title: ${title}`);
+      // console.log(`Approved recording with title: ${title}`);
       setRecordings(recordings.filter((recording) => recording._id !== id));
       setExpandedRecording(null);
       toast({
@@ -66,7 +66,7 @@ const ApprovePage = () => {
   const handleDecline = async (id: string, title: string) => {
     try {
       await declineRecording(id);
-      console.log(`Declined recording with title: ${title}`);
+      // console.log(`Declined recording with title: ${title}`);
       setRecordings(recordings.filter((recording) => recording._id !== id));
       setExpandedRecording(null);
       toast({
