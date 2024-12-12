@@ -10,7 +10,6 @@ export const refreshTokenApi2 = async () => {
     const response = await apiClient.post('/auth/refresh', {
       refreshToken: localStorage.getItem('refreshToken')
     });
-    console.log();
     return response.data.data;
   };
 

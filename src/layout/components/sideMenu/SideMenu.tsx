@@ -1,8 +1,8 @@
 import styles from "./styles.module.scss";
 import SideBtn from "./sideBtn/SideBtn";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
-import { HiUsers } from "react-icons/hi";
-import { FaUser } from "react-icons/fa6";
+// import { HiUsers } from "react-icons/hi";
+import { FaFileAudio } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import LogoutButton from "../logoutButton/LogoutButton";
 
@@ -24,17 +24,23 @@ const SideMenu = () => {
             title="Overview"
             to="/admin/overview"
           />
-          <SideBtn
+          {/* <SideBtn
             icon={HiUsers}
             iconHovered={HiUsers}
             title="Accounts"
             to="/admin/accounts-management"
-          />
-          <SideBtn
+          /> */}
+          {/* <SideBtn
             icon={FaUser}
             iconHovered={FaUser}
             title="Upload"
             to="/admin/uploader"
+          /> */}
+          <SideBtn
+            icon={FaFileAudio}
+            iconHovered={FaFileAudio}
+            title="Approve"
+            to="/admin/approve"
           />
         </div>
       </div>
