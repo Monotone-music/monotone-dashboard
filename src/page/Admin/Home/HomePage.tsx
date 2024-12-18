@@ -76,15 +76,15 @@ const HomePage = () => {
           unit="Views"
           loading={loading}
         />
-        <button 
+        <button className="text-left"
           onClick={handleNavigateToApprovePage}
         >
         <AnalyticCard
           iconColor="#673AB7"
           icon={AiOutlineCheckCircle}
-          title="Track Approve Requests"
+          title="Approve Requests"
           mainNumber={totalApproveReq}
-          unit="Tracks Pending Review"
+          unit="Pending Review"
           loading={loading}  
         />
         </button>

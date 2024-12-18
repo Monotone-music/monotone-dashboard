@@ -15,7 +15,7 @@ export const useSignInMutation = () => {
         setIsAuthenticated(true);
         setToken(data.data.data.accessToken);
         setRefreshToken(data.data.data.refreshToken)
-        // console.log(data.data)
+        console.log(data.data)
         localStorage.setItem('token', data.data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.data.refreshToken);
       },

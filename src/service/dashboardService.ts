@@ -15,7 +15,7 @@ export const getHistoricalViewCounts = async () => {
     return response.data.data.totalViews;
 };
 export const getApproveReqCounts = async () => {
-    const response = await apiClient.get('/recording/unavailable/count');
+    const response = await apiClient.get('/analytics/pending/count');
     return response.data.data.count;
 };
 
