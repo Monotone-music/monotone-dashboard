@@ -6,6 +6,7 @@ import {
   
   Navigate,
   RouterProvider,
+  useNavigate,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -17,11 +18,23 @@ import AccountsManagement from "./page/Admin/Accounts/AccountsManagement";
 import ArtistAccount from "./page/Admin/Accounts/Artist/ArtistAccount";
 import UploaderPage from "./page/Uploader/UploaderPage";
 import ApprovePage from "./page/Approve/ApprovePage";
+import { useEffect } from "react";
+import { setNavigate } from "./service/apiClient";
 // import router from "./util/Router";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 5, retryDelay: 1000 } },
 });
+
+function NavigationWrapper({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
+  
+  return <>{children}</>;
+}
 
 const router = createBrowserRouter([
   {
@@ -30,11 +43,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/auth/sign-in",
-    element: <AuthPage />,
+    element: <NavigationWrapper><AuthPage /></NavigationWrapper>,
   },
   {
     path: "/admin",
-    element: <RootLayout />, // Protect all /admin routes
+    element: <NavigationWrapper><RootLayout /></NavigationWrapper>,
     children: [
       { path: "overview", element: <HomePage /> },
       {
