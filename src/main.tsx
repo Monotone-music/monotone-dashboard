@@ -14,10 +14,11 @@ import AuthPage from "./page/Auth/AuthPage";
 import { Toaster } from "./components/ui/toaster";
 import RootLayout from "./layout/Root/RootLayout";
 import HomePage from "./page/Admin/Home/HomePage";
-import ApprovePage from "./page/Approve/ApprovePage";
+
 import { useEffect } from "react";
 import { setNavigate } from "./service/apiClient";
 import PaymentHistoryPage from "./page/PaymentHistory/PaymentHistoryPage";
+import ApprovePage from "./page/Approve/ApprovePage/ApprovePage";
 // import router from "./util/Router";
 
 const queryClient = new QueryClient({

@@ -120,7 +120,7 @@ const ApproveAdsTab = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center w-full h-screen">
+      <div className="flex items-center justify-center w-full">
         <PuffLoader />
       </div>
     );
