@@ -43,3 +43,8 @@ export const getAllAccountByType = async (role: 'listener' | 'label' | 'artist')
 
   return response.data.data
 }
+
+export const toggleStatusAccount = async (accountId: string) => {
+  const response = await apiClient.patch(`/account/toggle/${accountId}`);
+  return response.data.data
+}

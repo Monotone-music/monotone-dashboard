@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import styles from "./styles.module.scss";
 import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
@@ -15,28 +16,50 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Account } from "@/data/mockAccountData";
-import { getAllAccountByType } from "@/service/adminService";
-import { useQuery } from "@tanstack/react-query";
+import {
+  getAllAccountByType,
+  toggleStatusAccount,
+} from "@/service/adminService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PuffLoader } from "react-spinners";
 import formatMonthYear from "@/util/formatDate";
+import { useToast } from "@/hooks/use-toast";
 
 interface AccountTableProps {
   accountType: "listener" | "artist" | "label";
 }
 
 const AccountTable: React.FC<AccountTableProps> = ({ accountType }) => {
-  const [accounts, setAccounts] = useState<Account[]>();
-  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<any>(null);
+  const [actionType, setActionType] = useState<'activate' | 'deactivate'>('deactivate');
+  const { toast } = useToast();
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+  const queryClient = useQueryClient();
 
-  const handleStatusToggle = (account: Account) => {
-    if (account.isActive) {
-      setSelectedAccount(account);
-      setShowDeactivateModal(true);
-    } else {
-      updateAccountStatus(account.id, true);
-    }
+  const toggleMutation = useMutation({
+    mutationFn: (accountId: string) => toggleStatusAccount(accountId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["accounts", accountType] });
+      toast({
+        title: "Success",
+        description: "Account status updated successfully",
+        className: styles['toast-success']
+      });
+      setShowDeactivateModal(false);
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update account status",
+      });
+    },
+  });
+
+  const handleStatusToggle = (account: any) => {
+    setSelectedAccount(account);
+    setActionType(account.account.status === 'active' ? 'deactivate' : 'activate');
+    setShowDeactivateModal(true);
   };
 
   const { data, isLoading } = useQuery({
@@ -44,16 +67,6 @@ const AccountTable: React.FC<AccountTableProps> = ({ accountType }) => {
     queryFn: () => getAllAccountByType(accountType),
   });
 
-//   console.log(data);
-
-  const updateAccountStatus = (id: string, status: boolean) => {
-    // setAccounts(
-    //   accounts.map((acc) =>
-    //     acc.id === id ? { ...acc, isActive: status } : acc
-    //   )
-    // );
-    setShowDeactivateModal(false);
-  };
 
   return (
     <>
@@ -61,74 +74,82 @@ const AccountTable: React.FC<AccountTableProps> = ({ accountType }) => {
         <TableHeader>
           <TableRow>
             <TableHead>Username</TableHead>
-            {/* <TableHead>Email</TableHead> */}
+            <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
             <TableHead>Created At</TableHead>
-            
+            <TableHead>Status</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
-        {isLoading ? <PuffLoader/> : <>
+        {isLoading ? (
+          <PuffLoader />
+        ) : (
+          <>
             <TableBody>
-          {accountType === "artist"
-            ? data.artists.map((account:any, index: number) => (
+              {data.map((account: any, index: number) => (
                 <TableRow key={index}>
-                  <TableCell>{account.name}</TableCell>
-                  {/* <TableCell>{account.email}</TableCell> */}
+                  <TableCell>
+                    {accountType === "artist"
+                      ? account.name
+                      : account.displayName}
+                  </TableCell>
+                  {account.account ? (
+                    <TableCell>{account.account.email}</TableCell>
+                  ) : (
+                    <TableCell></TableCell>
+                  )}
                   <TableCell>{accountType}</TableCell>
                   <TableCell>{formatMonthYear(account.createdAt)}</TableCell>
-                  {/* <TableCell>
-                <Switch
-                  checked={account.isActive}
-                  onCheckedChange={() => handleStatusToggle(account)}
-                />
-              </TableCell> */}
+                  {account.account ? (
+                    <TableCell>{account.account.status}</TableCell>
+                  ) : (
+                    <TableCell></TableCell>
+                  )}
+                  <TableCell>
+                    {account.account ? (
+                      <Switch
+                        checked={account.account.status === "active"}
+                        onCheckedChange={() => handleStatusToggle(account)}
+                        disabled={toggleMutation.isPending}
+                      />
+                    ) : (
+                      <TableCell></TableCell>
+                    )}
+                  </TableCell>
                 </TableRow>
-              ))
-            : data.map((account:any, index: number) => (
-                <TableRow key={index}>
-                  <TableCell>{account.displayName}</TableCell>
-                  <TableCell>{accountType}</TableCell>
-                  <TableCell>{formatMonthYear(account.createdAt)}</TableCell>
-                  {/* <TableCell>
-                <Switch
-                  checked={account.isActive}
-                  onCheckedChange={() => handleStatusToggle(account)}
-                />
-              </TableCell> */}
-                </TableRow>
-              ))
-              }
-        </TableBody>
-        
-        </>}
-
-      
+              ))}
+            </TableBody>
+          </>
+        )}
       </Table>
 
       <Dialog open={showDeactivateModal} onOpenChange={setShowDeactivateModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Deactivate Account</DialogTitle>
+            <DialogTitle>
+              {actionType === 'deactivate' ? 'Deactivate' : 'Activate'} Account
+            </DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            Are you sure you want to deactivate this account?
-            <p className="font-semibold">{selectedAccount?.username}</p>
+            Are you sure you want to {actionType} this account?
+            <p className="font-semibold">{selectedAccount?.account?.email}</p>
           </div>
           <div className="flex justify-end gap-2">
             <Button
               variant="outline"
               onClick={() => setShowDeactivateModal(false)}
+              disabled={toggleMutation.isPending}
             >
               Cancel
             </Button>
             <Button
-              variant="destructive"
-              onClick={() =>
-                selectedAccount &&
-                updateAccountStatus(selectedAccount.id, false)
-              }
+              variant={actionType === 'deactivate' ? 'destructive' : 'default'}
+              onClick={() => selectedAccount && toggleMutation.mutate(selectedAccount.account._id)}
+              disabled={toggleMutation.isPending}
             >
-              Deactivate
+              {toggleMutation.isPending 
+                ? `${actionType === 'deactivate' ? 'Deactivating' : 'Activating'}...` 
+                : actionType === 'deactivate' ? 'Deactivate' : 'Activate'}
             </Button>
           </div>
         </DialogContent>
