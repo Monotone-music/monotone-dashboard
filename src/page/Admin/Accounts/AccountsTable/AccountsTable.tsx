@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import styles from "./styles.module.scss";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
