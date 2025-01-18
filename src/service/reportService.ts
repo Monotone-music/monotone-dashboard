@@ -21,3 +21,12 @@ export const resolveReportById = async (reportID: string) => {
     const response = await apiClient.patch(`/report/resolve/${reportID}`);
     return response.data.data;
 }
+
+export const disableTrackReport = async (recordingId: string, reportId: string) => {
+    const body =  {
+        reportId,
+        recordingId
+    }
+    const response = await apiClient.patch(`/recording/bomb`, body);
+    return response.data.data;
+}

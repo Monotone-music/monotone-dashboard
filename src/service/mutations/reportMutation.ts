@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { clearRecordingById, resolveReportById } from '@/service/reportService';
+import { clearRecordingById, disableTrackReport, resolveReportById } from '@/service/reportService';
 
 export const useReportMutations = () => {
   const queryClient = useQueryClient();
@@ -18,7 +18,16 @@ export const useReportMutations = () => {
     }
   });
 
+  const disableTrack = useMutation({
+    mutationFn: (params: { recordingId: string, reportId: string }) => 
+      disableTrackReport(params.recordingId, params.reportId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reportData'] });
+    }
+  });
+
   return {
+    disableTrack,
     clearRecording,
     resolveReport
   };

@@ -11,9 +11,13 @@ export const approveRecording = async (id: string) => {
     return response.data;
 };
 
-export const declineRecording = async (id: string) => {
-    const response = await apiClient.patch(`/recording/reject/${id}`);
-    console.log(response.data);
+export const declineRecording = async (id: string, reason: string) => {
+    const response = await apiClient.patch(`/recording/reject/${id}`, { reason });
+    return response.data;
+};
+
+export const declineAds = async (id: string, reason: string) => {
+    const response = await apiClient.patch(`/advertisement/reject/${id}`, { reason });
     return response.data;
 };
 
@@ -27,7 +31,7 @@ export const approveAd = async (id: string) => {
     return response.data;
 };
 
-export const declineAd = async (id: string) => {
-    const response = await apiClient.patch(`/advertisement/reject/${id}`);
+export const declineAd = async (id: string, body: string) => {
+    const response = await apiClient.patch(`/advertisement/reject/${id}`, body);
     return response.data;
 };

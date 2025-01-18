@@ -67,6 +67,7 @@ const AccountTable: React.FC<AccountTableProps> = ({ accountType }) => {
     queryFn: () => getAllAccountByType(accountType),
   });
 
+  console.log(data)
 
   return (
     <>

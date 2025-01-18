@@ -28,8 +28,8 @@ const ReportForm: React.FC<ReportFormProps> = ({
     queryKey: ["reportDetailData", reportId, userId],
     queryFn: () => getReportInfoById(reportId),
   });
-
-  const { clearRecording, resolveReport } = useReportMutations();
+  console.log(reportDetailData?.report?.[0]?._id);
+  const { clearRecording, resolveReport, disableTrack } = useReportMutations();
 
   const handleClear = (recordingId: string) => {
     clearRecording.mutate(recordingId, {
@@ -40,10 +40,11 @@ const ReportForm: React.FC<ReportFormProps> = ({
           title: "Clear successfully",
           className: styles["toast-success"],
         });
+        setShowForm(false);
       },
       onError: () => {
         toast({
-          variant: "default",
+          variant: "destructive",
           duration: 3000,
           title: "Clear Failed!",
           className: styles["toast-failed"],
@@ -61,10 +62,11 @@ const ReportForm: React.FC<ReportFormProps> = ({
           title: "Resolve successfully",
           className: styles["toast-success"],
         });
+        setShowForm(false);
       },
       onError: () => {
         toast({
-          variant: "default",
+          variant: "destructive",
           duration: 3000,
           title: "Resolve Failed!",
           className: styles["toast-failed"],
@@ -73,7 +75,32 @@ const ReportForm: React.FC<ReportFormProps> = ({
     });
   };
 
-  console.log(reportDetailData);
+  const handleDisable = (recordingId: string, reportId: string) => {
+    console.log(reportId)
+    disableTrack.mutate(
+      { recordingId, reportId },
+      {
+        onSuccess: () => {
+          toast({
+            variant: "default",
+            duration: 3000,
+            title: "Disable Track successfully",
+            className: styles["toast-success"],
+          });
+          setShowForm(false);
+        },
+        onError: () => {
+          toast({
+            variant: "destructive",
+            duration: 3000,
+            title: "Disable Track Failed!",
+            className: styles["toast-failed"],
+          });
+        },
+      }
+    );
+  };
+
   return (
     <div className={styles["form-container"]}>
       {isLoading && (
@@ -146,6 +173,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
                               Reason:
                             </label>
                             <Textarea
+                              disabled
                               className="h-[auto]"
                               placeholder={item.reason || "No Reason"}
                               id="message"
@@ -179,13 +207,28 @@ const ReportForm: React.FC<ReportFormProps> = ({
                 Resolve Report
               </Button>
             </div>
-            <Button
-              variant="outline"
-              className="w-full mt-4 h-14"
-              onClick={() => setShowForm(false)}
-            >
-              Cancel
-            </Button>
+            <div className="w-full flex items-center gap-2">
+              <Button
+                variant="default"
+                className="w-full mt-4 h-14"
+                disabled={!reportDetailData?.report?.[0]?._id}
+                onClick={() =>
+                  handleDisable(
+                    reportDetailData._id,
+                    reportDetailData?.report?.[0]?._id
+                  )
+                }
+              >
+                Disable Track
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full mt-4 h-14"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         </div>
       )}

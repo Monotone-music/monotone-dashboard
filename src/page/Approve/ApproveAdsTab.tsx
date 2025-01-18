@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import { Button } from "@/components/ui/button";
 import PuffLoader from "react-spinners/PuffLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { approveAd, declineAd, getPendingAds } from "@/service/approveService";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { approveAd, declineAds, getPendingAds } from "@/service/approveService";
+import { Textarea } from "@/components/ui/textarea";
 
 interface PlayerAd {
   _id: string;
@@ -33,8 +33,7 @@ interface BannerAd {
 }
 
 const ApproveAdsTab = () => {
-  const [showDeclineDialog, setShowDeclineDialog] = useState(false);
-  const [declineReason, setDeclineReason] = useState("");
+  const [rejectionReason, setRejectionReason] = useState<string>("");
   const [playerAds, setPlayerAds] = useState<PlayerAd[]>([]);
   const [bannerAds, setBannerAds] = useState<BannerAd[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,13 +86,19 @@ const ApproveAdsTab = () => {
     }
   };
 
-  const handleDeclineClick = () => {
-    setShowDeclineDialog(true);
-  };
 
-  const handleDecline = async (id: string, title: string, type: string) => {
+  const handleDeclineSubmit = async (id: string, title: string, type: string) => {
     try {
-      await declineAd(id);
+      if (!rejectionReason.trim()) {
+        toast({
+          title: "Error",
+          description: "Please provide a reason for rejection",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      await declineAds(id, rejectionReason);
       if (type === "player_ad") {
         setPlayerAds(playerAds.filter((ad) => ad._id !== id));
       } else {
@@ -106,6 +111,7 @@ const ApproveAdsTab = () => {
         variant: "default",
         className: styles["toast-success"],
       });
+      setRejectionReason("")
     } catch (error) {
       console.error(`Error declining advertisement: ${title}`, error);
       toast({
@@ -189,9 +195,12 @@ const ApproveAdsTab = () => {
                             <span className="font-bold">Title: </span>{" "}
                             {ad.title}
                           </h2>
-                          {/* <p>
-                            <span className="font-bold">Views: </span> {ad.view}
-                          </p> */}
+                          <Textarea
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                      placeholder="Enter decline reason..."
+                      className="min-h-[100px]"
+                    />
                         </div>
                         <div className={styles.actions}>
                           <Button
@@ -204,10 +213,7 @@ const ApproveAdsTab = () => {
                           </Button>
                           <Button
                             variant="destructive"
-                            // onClick={() =>
-                            //   handleDecline(ad._id, ad.title, "player_ad")
-                            // }
-                            onClick={handleDeclineClick}
+                            onClick={() => handleDeclineSubmit(ad._id, ad.title, "player_ad")}
                           >
                             Decline
                           </Button>
@@ -238,9 +244,6 @@ const ApproveAdsTab = () => {
                       <h2>
                         <span className="font-bold">Title: </span> {ad.title}
                       </h2>
-                      {/* <p>
-                        <span className="font-bold">Views: </span> {ad.view}
-                      </p> */}
                     </div>
                   </div>
                 ))
@@ -263,9 +266,12 @@ const ApproveAdsTab = () => {
                             <span className="font-bold">Title: </span>{" "}
                             {ad.title}
                           </h2>
-                          {/* <p>
-                            <span className="font-bold">Views: </span> {ad.view}
-                          </p> */}
+                          <Textarea
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                      placeholder="Enter decline reason..."
+                      className="min-h-[100px]"
+                    />
                         </div>
                         <div className={styles.actions}>
                           <Button
@@ -279,7 +285,7 @@ const ApproveAdsTab = () => {
                           <Button
                             variant="destructive"
                             onClick={() =>
-                              handleDecline(ad._id, ad.title, "banner_ad")
+                              handleDeclineSubmit(ad._id, ad.title, "banner_ad")
                             }
                           >
                             Decline
@@ -293,30 +299,6 @@ const ApproveAdsTab = () => {
           </div>
         </TabsContent>
       </Tabs>
-      <Dialog open={showDeclineDialog} onOpenChange={setShowDeclineDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Decline Recording</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <label className="block mb-2">Please provide a reason for declining:</label>
-            <textarea
-              value={declineReason}
-              // onChange={(e) => setDeclineReason(e.target.value)}
-              placeholder="Enter decline reason..."
-              className="min-h-[100px]"
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setShowDeclineDialog(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" >
-              Submit
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
