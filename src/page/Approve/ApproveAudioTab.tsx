@@ -8,6 +8,8 @@ import {
 import { Button } from "@/components/ui/button";
 import PuffLoader from "react-spinners/PuffLoader";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 // import apiClient from "@/service/apiClient"; // Import apiClient
 
 const ApproveAudioTab = () => {
@@ -18,7 +20,8 @@ const ApproveAudioTab = () => {
     duration: number;
     image: { filename: string };
   }
-
+  const [showDeclineDialog, setShowDeclineDialog] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedRecording, setExpandedRecording] = useState<string | null>(null);
@@ -61,6 +64,10 @@ const ApproveAudioTab = () => {
         className: styles["toast-error"],
       });
     }
+  };
+
+  const handleDeclineClick = () => {
+    setShowDeclineDialog(true);
   };
 
   const handleDecline = async (id: string, title: string) => {
@@ -188,7 +195,8 @@ const ApproveAudioTab = () => {
                       </Button>
                       <Button
                         variant={"destructive"}
-                        onClick={() => handleDecline(recording._id, recording.title)}
+                        // onClick={() => handleDecline(recording._id, recording.title)}
+                        onClick={handleDeclineClick}
                       >
                         Decline
                       </Button>
@@ -199,6 +207,31 @@ const ApproveAudioTab = () => {
           </div>
         )}
       </div>
+
+      <Dialog open={showDeclineDialog} onOpenChange={setShowDeclineDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Decline Recording</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <label className="block mb-2">Please provide a reason for declining:</label>
+            <Textarea
+              value={declineReason}
+              onChange={(e) => setDeclineReason(e.target.value)}
+              placeholder="Enter decline reason..."
+              className="min-h-[100px]"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setShowDeclineDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" >
+              Submit
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

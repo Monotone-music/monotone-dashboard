@@ -5,6 +5,7 @@ import PuffLoader from "react-spinners/PuffLoader";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { approveAd, declineAd, getPendingAds } from "@/service/approveService";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface PlayerAd {
   _id: string;
@@ -32,6 +33,8 @@ interface BannerAd {
 }
 
 const ApproveAdsTab = () => {
+  const [showDeclineDialog, setShowDeclineDialog] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
   const [playerAds, setPlayerAds] = useState<PlayerAd[]>([]);
   const [bannerAds, setBannerAds] = useState<BannerAd[]>([]);
   const [loading, setLoading] = useState(true);
@@ -82,6 +85,10 @@ const ApproveAdsTab = () => {
         className: styles["toast-error"],
       });
     }
+  };
+
+  const handleDeclineClick = () => {
+    setShowDeclineDialog(true);
   };
 
   const handleDecline = async (id: string, title: string, type: string) => {
@@ -197,9 +204,10 @@ const ApproveAdsTab = () => {
                           </Button>
                           <Button
                             variant="destructive"
-                            onClick={() =>
-                              handleDecline(ad._id, ad.title, "player_ad")
-                            }
+                            // onClick={() =>
+                            //   handleDecline(ad._id, ad.title, "player_ad")
+                            // }
+                            onClick={handleDeclineClick}
                           >
                             Decline
                           </Button>
@@ -285,6 +293,30 @@ const ApproveAdsTab = () => {
           </div>
         </TabsContent>
       </Tabs>
+      <Dialog open={showDeclineDialog} onOpenChange={setShowDeclineDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Decline Recording</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <label className="block mb-2">Please provide a reason for declining:</label>
+            <textarea
+              value={declineReason}
+              // onChange={(e) => setDeclineReason(e.target.value)}
+              placeholder="Enter decline reason..."
+              className="min-h-[100px]"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setShowDeclineDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" >
+              Submit
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -37,3 +37,9 @@ export const deleteAccountsByIds = async (token: string | null, ids: string[]) =
   });
   return response.data;
 };
+
+export const getAllAccountByType = async (role: 'listener' | 'label' | 'artist') => {
+  const response = await apiClient.get(`/account/${role}`);
+
+  return response.data.data
+}

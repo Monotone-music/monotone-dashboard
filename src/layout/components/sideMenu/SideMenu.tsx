@@ -1,8 +1,8 @@
 import styles from "./styles.module.scss";
 import SideBtn from "./sideBtn/SideBtn";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
-// import { HiUsers } from "react-icons/hi";
-import { FaCreditCard, FaFileAudio } from "react-icons/fa6";
+import { TbMessageReportFilled } from "react-icons/tb";
+import { FaCreditCard, FaFileAudio, FaUsers } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import LogoutButton from "../logoutButton/LogoutButton";
 
@@ -35,6 +35,18 @@ const SideMenu = () => {
             iconHovered={FaCreditCard}
             title="Payment History"
             to="/admin/history"
+          />
+          <SideBtn
+            icon={TbMessageReportFilled }
+            iconHovered={TbMessageReportFilled }
+            title="Report Management"
+            to="/admin/report"
+          />
+                <SideBtn
+            icon={FaUsers  }
+            iconHovered={FaUsers  }
+            title="Account Management"
+            to="/admin/account"
           />
         </div>
       </div>

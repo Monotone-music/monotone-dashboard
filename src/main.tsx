@@ -19,6 +19,8 @@ import { useEffect } from "react";
 import { setNavigate } from "./service/apiClient";
 import PaymentHistoryPage from "./page/PaymentHistory/PaymentHistoryPage";
 import ApprovePage from "./page/Approve/ApprovePage/ApprovePage";
+import ReportPage from "./page/Report/ReportPage";
+import AccountPage from "./page/Account/AccountPage";
 // import router from "./util/Router";
 
 const queryClient = new QueryClient({
@@ -51,6 +53,8 @@ const router = createBrowserRouter([
       { path: "overview", element: <HomePage /> },
       { path: "approve", element: <ApprovePage /> },
       { path: "history", element: <PaymentHistoryPage /> },
+      { path: "report", element: <ReportPage /> },
+      {path: "account", element: <AccountPage/>}
 
     ],
   },
